@@ -20,11 +20,12 @@ from selenium.common.exceptions import StaleElementReferenceException
 url = "https://www.ana.co.jp/ja/jp/"
 
 logging.basicConfig(
-  filename= "ana_sale/log.txt",
   level= logging.INFO,
   format= "%(asctime)s, %(levelname)s, %(message)s",
-  filemode= "a",
-  encoding= "utf-8"
+  handlers=[
+    logging.FileHandler("ana_sale/log.txt", encoding="utf-8", mode="a"),
+    logging.StreamHandler()
+   ]
   )
 
 now = datetime.now(ZoneInfo("Asia/Tokyo"))
@@ -32,7 +33,7 @@ now = datetime.now(ZoneInfo("Asia/Tokyo"))
 if 1 <= now.hour < 8:
   logging.info(f"現在{now.hour}時で。停止時間です。")
   exit()
-  
+
 #月次状態確認
 def monthly_status():
   try:
@@ -83,9 +84,9 @@ def update_monthly_status(status, year, month, completed, last_run):
 
 SMTP_SERVER = "smtp.gmail.com"
 PORT = 465
-FROM_EMAIL = os.getenv("sender_email")
-APP_PASSWORD = os.getenv("sender_password")
-TO_EMAIL = os.getenv("receiver_email")
+FROM_EMAIL = os.getenv("SENDER_EMAIL")
+APP_PASSWORD = os.getenv("EMAIL_PASSWORD")
+TO_EMAIL = os.getenv("RECEIVER_EMAIL")
 
 def send_email_with_retry(subject, body, retries=3, base_delay=2):
   msg = MIMEText(body, "plain", "utf-8")
