@@ -2,6 +2,7 @@ import os
 import logging
 import time
 from datetime import datetime
+from zoneinfo import ZoneInfo
 import threading
 import json
 import smtplib
@@ -26,6 +27,12 @@ logging.basicConfig(
   encoding= "utf-8"
   )
 
+now = datetime.now(ZoneInfo("Asia/Tokyo"))
+
+if 1 <= now.hour < 8:
+  logging.info(f"現在{now.hour}時で。停止時間です。")
+  exit()
+  
 #月次状態確認
 def monthly_status():
   try:
@@ -110,7 +117,6 @@ options = Options()
 options.add_argument("--headless")
 
 status = monthly_status()
-now = datetime.now()
 current_year = now.year
 current_month = now.month
 
