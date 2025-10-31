@@ -19,6 +19,8 @@ from selenium.common.exceptions import StaleElementReferenceException
 #設定
 url = "https://www.ana.co.jp/ja/jp/"
 
+os.makedirs("ana_sale", exist_ok=True)
+
 logging.basicConfig(
   level= logging.INFO,
   format= "%(asctime)s, %(levelname)s, %(message)s",
