@@ -63,6 +63,10 @@ def reset_monthly_status(status, year, month):
     status["month"] = month
     status["completed"] = False
     status["last_run"] = None
+
+    with open("ana_sale/monthly_status.py", "w") as file:
+      json.dump(status, file, indent= 4)
+      
   return status
 
 #今月は実行済みか
