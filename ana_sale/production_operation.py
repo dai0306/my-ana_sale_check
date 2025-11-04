@@ -66,7 +66,7 @@ def reset_monthly_status(status, year, month):
 
     with open("ana_sale/monthly_status.py", "w") as file:
       json.dump(status, file, indent= 4)
-      
+
   return status
 
 #今月は実行済みか
@@ -180,4 +180,7 @@ def ana_sale_check():
  finally:
      driver.quit()
      logging.info("処理終了")
-   
+
+if __name__ == "__main__":
+  ana_sale_check()
+  
