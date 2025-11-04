@@ -36,3 +36,13 @@ jobs:
         with:
           name: logs
           path:  ana_sale/log.txt
+
+      - name: Commit and push updated status file
+        run: |
+          if [ -f "ana_sale/monthly_status.json"]; then
+            git add ana_sale/monthly_status.json
+            git commit -m "update monthly status [skip ci]" || echo "No changes to commit"
+            git push origin main 
+          else
+            echo "No monthly_status.json found to commit"
+          fi
