@@ -6,6 +6,9 @@ on:
     - cron: '0 0,8-23 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  
 jobs:
   check_sale:
     runs-on: ubuntu-latest
@@ -39,7 +42,7 @@ jobs:
 
       - name: Commit and push updated status file
         run: |
-          if [ -f "ana_sale/monthly_status.json"]; then
+          if [ -f "ana_sale/monthly_status.json" ]; then
             git add ana_sale/monthly_status.json
             git commit -m "update monthly status [skip ci]" || echo "No changes to commit"
             git push origin main 
