@@ -6,9 +6,6 @@ on:
     - cron: '0 0,8-23 * * *'
   workflow_dispatch:
 
-permissions:
-  contents: write
-  
 jobs:
   check_sale:
     runs-on: ubuntu-latest
@@ -32,6 +29,10 @@ jobs:
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           RECEIVER_EMAIL: ${{ secrets.RECEIVER_EMAIL }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET}}
         run: python ana_sale/production_operation.py
 
       - name: Upload logs
@@ -39,13 +40,3 @@ jobs:
         with:
           name: logs
           path:  ana_sale/log.txt
-
-      - name: Commit and push updated status file
-        run: |
-          if [ -f "ana_sale/monthly_status.json" ]; then
-            git add ana_sale/monthly_status.json
-            git commit -m "update monthly status [skip ci]" || echo "No changes to commit"
-            git push origin main 
-          else
-            echo "No monthly_status.json found to commit"
-          fi

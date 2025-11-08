@@ -9,6 +9,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.utils import formatdate
 
+import boto3
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.edge.options import Options
@@ -36,16 +37,21 @@ if 1 <= now.hour < 8:
   logging.info(f"現在{now.hour}時で。停止時間です。")
   exit()
 
+s3 = boto3.client("s3")
+bucket = os.getenv("S3_BUCKET")
+key = "ana_sale/monthly_status.json"
+
 #月次状態確認
 def monthly_status():
   try:
-    with open("ana_sale/monthly_status.json", "r") as file:
-      status = json.load(file)
-
-  except FileNotFoundError:
-   logging.warning("ファイルが見つかりませんでした。")
-   status = {}
-   
+    data = s3.get_object(Bucket =bucket, Key=key)
+    status = json.loads(data["Body"].read().decode("utf-8"))
+    logging.info("s3から月次ステータスを読み込み")
+  except  s3.exceptions.NoSuchKey:
+    logging.warning("s3に月次ステータスが存在しません。")
+    status = []
+  except Exception as e:
+    logging.error("エラー:%s", e)
   return status
 
 #月が変わったらリセット
@@ -64,9 +70,15 @@ def reset_monthly_status(status, year, month):
     status["completed"] = False
     status["last_run"] = None
 
-    with open("ana_sale/monthly_status.py", "w") as file:
-      json.dump(status, file, indent= 4)
-
+  try:
+    s3.put_object(
+    Bucket=bucket,
+    Key=key,
+    Body=json.dumps(status, indent=2)
+  )
+    logging.info("アップロード完了")
+  except Exception as e:
+    logging.error("アップロード失敗:%s", e)
   return status
 
 #今月は実行済みか
@@ -84,9 +96,16 @@ def update_monthly_status(status, year, month, completed, last_run):
   status["completed"] = completed
   status["last_run"] = last_run
 
-  with open("ana_sale/monthly_status.json", "w") as file:
-    json.dump(status, file, indent= 4)
+  try:
+    s3.put_object(
+      Bucket=bucket,
+      Key=key,
+      Body=json.dumps(status, indent=2)
+    )
     logging.info("月次情報更新")
+  except Exception as e:
+    logging.error("月次情報更新失敗:%s", e)
+
 
 SMTP_SERVER = "smtp.gmail.com"
 PORT = 465
@@ -183,4 +202,3 @@ def ana_sale_check():
 
 if __name__ == "__main__":
   ana_sale_check()
-  
