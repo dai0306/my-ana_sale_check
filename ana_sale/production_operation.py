@@ -49,7 +49,7 @@ def monthly_status():
     logging.info("s3から月次ステータスを読み込み")
   except  s3.exceptions.NoSuchKey:
     logging.warning("s3に月次ステータスが存在しません。")
-    status = []
+    status = {}
   except Exception as e:
     logging.error("エラー:%s", e)
   return status
