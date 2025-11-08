@@ -24,7 +24,7 @@ os.makedirs("ana_sale", exist_ok=True)
 
 logging.basicConfig(
   level= logging.INFO,
-  format= "%(asctime)s, %(levelname)s, %(functionname)d,[%(lineno)d], %(message)s",
+  format= "%(asctime)s, %(levelname)s, %(funcName)s,[%(lineno)d], %(message)s",
   handlers=[
     logging.FileHandler("ana_sale/log.txt", encoding="utf-8", mode="a"),
     logging.StreamHandler()
