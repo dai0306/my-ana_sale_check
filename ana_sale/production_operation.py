@@ -167,7 +167,7 @@ def ana_sale_check():
      for results in elements:
        try:
         text = results.get_attribute("innerText")
-        logging.info("該当要素のテキストを確認", text)
+        logging.info("該当要素のテキストを確認")
 
         if "国内線航空券タイムセール" in text:
           logging.info(f"該当テキストあり:{text}")
@@ -190,7 +190,7 @@ def ana_sale_check():
         thread.join()
       
         update_monthly_status(status, current_year, current_month, True, now.isoformat())
-        logging.info("月次情報更新:%i", now)
+        logging.info("月次情報更新:%s", now)
      else:
         logging.info("該当テキストなし")
 
