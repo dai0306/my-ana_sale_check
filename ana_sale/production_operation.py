@@ -52,6 +52,7 @@ def monthly_status():
     status = {}
   except Exception as e:
     logging.error("エラー:%s", e)
+    status = {}
   return status
 
 #月が変わったらリセット
