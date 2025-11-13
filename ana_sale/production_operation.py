@@ -169,7 +169,7 @@ def ana_sale_check():
         text = results.get_attribute("innerText")
         logging.info("該当要素のテキストを確認")
 
-        if "国内線航空券タイムセール" in text:
+        if "国内線航空券" in text:
           logging.info(f"該当テキストあり:{text}")
           found = True
           break
