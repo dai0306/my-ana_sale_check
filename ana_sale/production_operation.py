@@ -141,8 +141,8 @@ def send_email_with_retry(subject, body, retries=3, base_delay=2):
      return False
 
 options = Options()
-options.add_argument("--headless")
-
+options.add_argument("--headless=new")
+options.add_argument("--window-size=1920,1080")
 status = monthly_status()
 current_year = now.year
 current_month = now.month
@@ -159,7 +159,7 @@ def ana_sale_check():
      driver = webdriver.Edge(options=options)
      driver.get(url)
 
-     elements= WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "a.asw-heropersonalize-carousel__anchor")))
+     elements= WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "a.asw-heropersonalize-carousel__anchor")))
      logging.info("要素取得開始")
 
      found = False
@@ -167,7 +167,7 @@ def ana_sale_check():
      for results in elements:
        try:
         text = results.get_attribute("innerText")
-        logging.info("該当要素のテキストを確認:%s", text)
+        logging.info(f"該当要素のテキストを確認:{text}")
 
         if "国内線航空券タイムセール" in text:
           logging.info(f"該当テキストあり:{text}")
